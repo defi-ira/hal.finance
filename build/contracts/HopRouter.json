@@ -11776,14 +11776,140 @@
   },
   "networks": {
     "5777": {
-      "events": {},
+      "events": {
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0xa352002d708e7faff3eeef3b4475b6517105f279068f9a2a637a96822e5ced59": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "projectId",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_poolId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_amountLD",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            }
+          ],
+          "name": "PoolAddLiquidityEvent",
+          "type": "event"
+        },
+        "0x4890af0366188cf41fbde6fd71fd65ee373eadb3a7bdaf08c8e33327fe92f6b5": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "projectId",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "id",
+              "type": "uint8"
+            }
+          ],
+          "name": "PoolAdded",
+          "type": "event"
+        },
+        "0xfef8e61dd74c7aa672773153432114aa4c0a27897a80c715a986fd64ee621741": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "projectId",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_srcPoolId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_amountLP",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            }
+          ],
+          "name": "PoolRemoveLiquidity",
+          "type": "event"
+        },
+        "0xc711764bcf4589611b7bb6ddf25104d01fd1f72de959471f8a15786f4fb3df95": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "projectId",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "token",
+              "type": "string"
+            }
+          ],
+          "name": "PoolRemoved",
+          "type": "event"
+        }
+      },
       "links": {},
-      "address": "0xC41E8Cb2233Ea9dCd73039325b97902ddF39d25D",
-      "transactionHash": "0xb6505af70b731e9666229da6281a61f2ed708ce3b08750e217365a5dab8512c1"
+      "address": "0xEcf6ddB6BF7847f25D225e130fF47B5Eab684b03",
+      "transactionHash": "0x305e795046a4e1d4016f711c448f8800cb672a6b85de6ae594c673abdfae8e18"
     }
   },
   "schemaVersion": "3.4.10",
-  "updatedAt": "2022-12-31T15:19:57.135Z",
+  "updatedAt": "2023-01-06T20:49:29.138Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
