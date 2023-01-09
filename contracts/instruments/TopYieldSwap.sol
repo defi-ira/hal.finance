@@ -7,6 +7,10 @@ import "../interfaces/IIntegration.sol";
 
 contract TopYieldSwap is Ownable {
 
+    // TODO: make this contract depositable by a number of accounts.
+    // TODO: produce daily contract value. checkBal as a contract
+    // TODO: parameterize and do conditionals with risk stats on chain.
+
     uint16 private chainId;
     address private tokenAddr;
     uint16 private activePool;

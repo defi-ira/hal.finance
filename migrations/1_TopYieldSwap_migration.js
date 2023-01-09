@@ -30,6 +30,6 @@ module.exports = async function(deployer) {
     const stgYieldPool = await instance.addYieldPool(0x1, "STG", "USDC", stg.address);
     const addTokenToStg = await stg.addTokenPool("USDC", 0x1);
 
-    const hopYieldPool = await instance.addYieldPool(0x2, "HOP", "USDC", hop.address);
-    const addTokenToHop = await hop.addTokenPool("USDC", 0x0);
+    // const hopYieldPool = await instance.addYieldPool(0x2, "HOP", "USDC", hop.address);
+    // const addTokenToHop = await hop.addTokenPool("USDC", 0x0);
 }
