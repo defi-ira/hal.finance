@@ -32,15 +32,18 @@ contract HopRouter is IIntegration, Ownable {
         emit PoolRemoved(projectId, token);
     }
 
+    function getTokenPool(string memory token) public view returns (uint8 _tokenId) {
+        return tokenId[token];
+    }
+
     function addLiquidity(
         string memory _token,
         uint256 _amountLD,
         address _to
     ) external {
         router = IHopRouter(addr);
-        uint _poolId = tokenId[_token];
         router.addLiquidity(new uint256[](_amountLD), _amountLD, _to);
-        emit PoolAddLiquidityEvent(projectId, _poolId, _amountLD, _to);
+        emit PoolAddLiquidityEvent(projectId, tokenId[_token], _amountLD, _to);
     }
 
     function removeLiquidity(
@@ -49,9 +52,8 @@ contract HopRouter is IIntegration, Ownable {
         address _to
     ) external {
         router = IHopRouter(addr);
-        uint16 _srcPoolId = tokenId[token];
         router.removeLiquidityOneToken(_amountLP, hopTokenIndex, _amountLP, getDeadline(0x500000));
-        emit PoolRemoveLiquidity(projectId, _srcPoolId, _amountLP, _to);
+        emit PoolRemoveLiquidity(projectId, tokenId[token], _amountLP, _to);
     }
 
     function getDeadline(uint256 _timeBuffer) internal view returns (uint256 timestamp) {

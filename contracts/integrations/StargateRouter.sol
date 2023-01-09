@@ -30,6 +30,10 @@ contract StargateRouter is IIntegration, Ownable {
         emit PoolRemoved(projectId, token);
     }
 
+    function getTokenPool(string memory token) public view returns (uint8 _tokenId) {
+        return tokenId[token];
+    }
+
     function addLiquidity(
         string memory _token,
         uint256 _amountLD,

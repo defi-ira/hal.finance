@@ -22,6 +22,8 @@ contract TopYieldSwap is Ownable {
     event YieldPoolAdded(string _project, string _token, address _addr);
     event YieldPoolRemoved(uint16 _id);
 
+    event YieldPoolYieldSet(uint16 _poolId, uint16 _newYield);
+
     event EnterPool(uint16 _poolId, uint256 _amount, uint256 _balance);
     event ExitPool(uint16 _poolId, uint256 _amount);
 
@@ -63,7 +65,7 @@ contract TopYieldSwap is Ownable {
         tokenContract.transferFrom(msg.sender, address(this), _amount);
     }
 
-    function withdrawal(address _to, uint256 _amount) public gtZero(_amount) {
+    function withdrawal(address _to, uint256 _amount) public onlyOwner gtZero(_amount) {
         IERC20 tokenContract = IERC20(tokenAddr);
         tokenContract.transferFrom(address(this), _to, _amount);
     }
@@ -78,7 +80,7 @@ contract TopYieldSwap is Ownable {
         activePool = _yieldPool.id;
     }
 
-    function exitCurrentPool() internal {
+    function exitCurrentPool() public onlyOwner {
         YieldPool memory currentPool = yieldPools[activePool];
         IIntegration integration = IIntegration(yieldPools[activePool].addr);
         uint256 balance = IERC20(currentPool.addr).balanceOf(address(this));
@@ -98,9 +100,9 @@ contract TopYieldSwap is Ownable {
         uint16 _topYield = 0x0;
         uint16 _poolId = 0;
         for (uint16 i = 0; i < _length; i++) {
-            if (yieldPools[_poolIds[i]].currentYield >= _topYield) {
+            if (yieldPools[_poolIds[i]].currentYield > _topYield) {
                 _topYield = yieldPools[_poolIds[i]].currentYield;
-                _poolId = i;
+                _poolId = _poolIds[i];
             }
         }
         return yieldPools[_poolId];
@@ -128,6 +130,7 @@ contract TopYieldSwap is Ownable {
 
     function setYieldPoolYield(uint16 _id, uint16 _yield) public onlyOwner {
         yieldPools[_id].currentYield = _yield; 
+        emit YieldPoolYieldSet(_id, _yield);
     }
 
     function getYieldPool(uint16 _id) public view onlyOwner returns(YieldPool memory yieldPool) {

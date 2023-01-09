@@ -66,6 +66,7 @@ contract("TopYieldSwap", (accounts) => {
 
         const mint = await ERC20Instance.mint(user1, 0x4FFFF);
         const transfer = await ERC20Instance.transfer(contractInstance.address, 0xFFFF, {from: user1});
+        
         const approve = await contractInstance.approve(contractInstance.address, 0xFFFF, {from: user1});
         const withdrawal = await contractInstance.withdrawal(user1, 0xFFFF, {from: owner});
         assert.equal(withdrawal.receipt.status, true);
@@ -73,6 +74,24 @@ contract("TopYieldSwap", (accounts) => {
         const balance = await ERC20Instance.balanceOf(user1);
         assert.equal(balance, 0x4FFFF);
     });
+
+    it("should select the pool with the top yield", async() => {
+        const contractInstance = await createContractInstance1();
+        const hopIntegration = await addYieldPool1(contractInstance);
+        const stgIntegration = await addYieldPool2(contractInstance);
+        const acxIntegration = await addYieldPool3(contractInstance);
+
+        const setYield1 = await contractInstance.setYieldPoolYield(0x1, 0x9);
+        const setYield2 = await contractInstance.setYieldPoolYield(0x2, 0xFF);
+        const setYield3 = await contractInstance.setYieldPoolYield(0x3, 0x7);
+
+        const selectPool = await contractInstance.selectPool([0x1, 0x2, 0x3], 3);
+        assert.equal(selectPool.id, 0x2);
+    });
+
+    // 1.8.23 TODO: Mock yield pool interfacing contracts and test deposit, 
+    // withdrawal, and rebalance - make FSM in Miro
+
 
     // HELPERS //
 
@@ -98,6 +117,24 @@ contract("TopYieldSwap", (accounts) => {
             "HOP",  // project
             "USDC", // token
             "0x10541b07d8Ad2647Dc6cD67abd4c03575dade261"
+        );
+    }
+
+    async function addYieldPool2(contractInstance) {
+        return await contractInstance.addYieldPool(
+            0x2,    // id 
+            "STG",  // project
+            "USDC", // token
+            "0x53Bf833A5d6c4ddA888F69c22C88C9f356a41614"
+        );
+    }
+
+    async function addYieldPool3(contractInstance) {
+        return await contractInstance.addYieldPool(
+            0x3,    // id 
+            "ACX",  // project
+            "USDC", // token
+            "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
         );
     }
 
