@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/IIntegration.sol";
+import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../interfaces/IIntegration.sol";
 
 contract TopYieldSwap is Ownable {
 
@@ -47,6 +47,21 @@ contract TopYieldSwap is Ownable {
         }
     }
 
+    function approve(address spender, uint256 _amount) public gtZero(_amount) {
+        IERC20 tokenContract = IERC20(yieldPools[activePool].addr);
+        tokenContract.approve(spender, _amount);
+    }
+
+    function deposit(uint256 _amount) payable public gtZero(_amount) {
+        IERC20 tokenContract = IERC20(yieldPools[activePool].addr);
+        tokenContract.transferFrom(msg.sender, address(this), _amount);
+    }
+
+    function withdrawl(uint256 _amount) public onlyOwner gtZero(_amount) {
+        IERC20 tokenContract = IERC20(yieldPools[activePool].addr);
+        tokenContract.transferFrom(address(this), msg.sender, _amount);
+    }
+
     function getTokenBalance() public view returns (uint256 tokenBalance) {
         return IERC20(tokenAddr).balanceOf(address(this));
     }
@@ -60,7 +75,7 @@ contract TopYieldSwap is Ownable {
     function exitCurrentPool() internal {
         YieldPool memory currentPool = yieldPools[activePool];
         IIntegration integration = IIntegration(yieldPools[activePool].addr);
-        uint256 balance = integration.balanceOf(address(this));
+        uint256 balance = IERC20(currentPool.addr).balanceOf(address(this));
         integration.removeLiquidity(currentPool.token, balance, address(this));
         activePool = 0x0;
     }
@@ -103,6 +118,11 @@ contract TopYieldSwap is Ownable {
         delete yieldPools[_id];
         delete integrations[_id];
         emit YieldPoolRemoved(_id);
+    }
+
+    modifier gtZero (uint256 _amount) {
+        require(_amount > 0, "Amount should be greater than zero.");
+        _;
     }
 
 }

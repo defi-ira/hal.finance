@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-interface IIntegration is IERC20 {
+interface IIntegration {
 
     event PoolAddLiquidityEvent(uint8 projectId, uint _poolId, uint256 _amountLD, address _to);
     event PoolRemoveLiquidity(uint8 projectId, uint256 _srcPoolId, uint256 _amountLP, address _to);
