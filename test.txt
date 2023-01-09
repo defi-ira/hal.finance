@@ -1,0 +1,7 @@
+Ganache Testing Process
+
+1. Start the local ganache server from application
+2. Deploy the contract to that panache server
+3. Truffle console —url localhost:(port)
+4. Const contract = await ContractName.at(address)
+5. await contract.methoodName()

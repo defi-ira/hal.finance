@@ -47,6 +47,10 @@ contract TopYieldSwap is Ownable {
         }
     }
 
+    function getCurrentYield() public view returns (uint16 _apy) {
+        return yieldPools[activePool].currentYield;
+    }
+
     function approve(address spender, uint256 _amount) public gtZero(_amount) {
         IERC20 tokenContract = IERC20(yieldPools[activePool].addr);
         tokenContract.approve(spender, _amount);
