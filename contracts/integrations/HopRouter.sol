@@ -2,22 +2,24 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../interfaces/IStargateRouter.sol";
+import "../interfaces/IHopRouter.sol";
 import "../interfaces/IIntegration.sol";
 
 contract StargateRouter is IIntegration, Ownable {
 
-    uint8 projectId;                    // protocol project identifier
-    address private addr;               // router contract address
-    uint256 private stgChainId;         // STG chain identifier
-    IStargateRouter private router;     // STG router interface
+    uint8 projectId;
+    address private addr;
+    uint256 private hopChainId;
+    uint8 private hopTokenIndex;
+    IHopRouter private router;
 
     mapping(string => uint8) private tokenId;
     
-    constructor(address _addr, uint8 _projectId, uint16 _chainId) {
+    constructor(address _addr, uint8 _projectId, uint16 _chainId, uint8 _hopTokenIndex) {
         addr = _addr;
         projectId = _projectId;
-        stgChainId = _chainId;
+        hopChainId = _chainId;
+        hopTokenIndex = _hopTokenIndex;
     }
 
     function addTokenPool(string memory token, uint8 id) public onlyOwner {
@@ -35,9 +37,9 @@ contract StargateRouter is IIntegration, Ownable {
         uint256 _amountLD,
         address _to
     ) external {
-        router = IStargateRouter(addr);
+        router = IHopRouter(addr);
         uint _poolId = tokenId[_token];
-        router.addLiquidity(_poolId, _amountLD, _to);
+        router.addLiquidity(new uint256[](_amountLD), _amountLD, _to);
         emit PoolAddLiquidityEvent(projectId, _poolId, _amountLD, _to);
     }
 
@@ -46,10 +48,13 @@ contract StargateRouter is IIntegration, Ownable {
         uint256 _amountLP,
         address _to
     ) external {
-        router = IStargateRouter(addr);
+        router = IHopRouter(addr);
         uint16 _srcPoolId = tokenId[token];
-        router.instantRedeemLocal(_srcPoolId, _amountLP, _to);
+        router.removeLiquidityOneToken(_amountLP, hopTokenIndex, _amountLP, getDeadline(0x500000));
         emit PoolRemoveLiquidity(projectId, _srcPoolId, _amountLP, _to);
     }
 
+    function getDeadline(uint256 _timeBuffer) internal view returns (uint256 timestamp) {
+        return block.timestamp + _timeBuffer;
+    }
 }

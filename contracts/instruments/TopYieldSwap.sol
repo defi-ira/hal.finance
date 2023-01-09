@@ -11,11 +11,11 @@ contract TopYieldSwap is Ownable {
     uint16 private activePool;
 
     struct YieldPool {
-        uint16 id;
-        string project;
-        string token;
-        address addr;
-        uint16 currentYield;
+        uint16 id;              // unique pool id
+        string project;         // project name
+        string token;           // ERC20 name
+        address addr;           // pool address
+        uint16 currentYield;    // pool yield
     }
 
     event YieldPoolAdded(string _project, string _token, address _addr);
@@ -34,7 +34,8 @@ contract TopYieldSwap is Ownable {
     }
 
     /**
-     * @dev rebalance will exclusively: do nothing, exit current pool, or enter top pool 
+     * @dev rebalance will exclusively: do nothing, exit current pool, or enter top pool
+     * should therefore be called again if exit current pool was the performed action.
      */
     function rebalance(uint16[] calldata _poolIds, uint16 _length) public onlyOwner returns(uint16 _yield) {
         uint256 tokenBalance = getTokenBalance();
