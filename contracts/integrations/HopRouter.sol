@@ -5,7 +5,7 @@ import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IHopRouter.sol";
 import "../interfaces/IIntegration.sol";
 
-contract StargateRouter is IIntegration, Ownable {
+contract HopRouter is IIntegration, Ownable {
 
     uint8 projectId;
     address private addr;

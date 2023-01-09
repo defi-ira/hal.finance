@@ -9,6 +9,6 @@ module.exports = function(deployer) {
         "0x10541b07d8Ad2647Dc6cD67abd4c03575dade261",
         0x2,
         0x2, 
-        0x0     // token index of USDC on Arb HOP is 0
+        0x0
     );
 }
