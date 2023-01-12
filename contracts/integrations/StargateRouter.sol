@@ -2,6 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/IStargateRouter.sol";
 import "../interfaces/IIntegration.sol";
 
@@ -18,6 +19,10 @@ contract StargateRouter is IIntegration, Ownable {
         addr = _addr;
         projectId = _projectId;
         stgChainId = _chainId;
+    }
+
+    function getBalance(address _poolAddress) public view returns (uint256 balance) {
+        return IERC20(_poolAddress).balanceOf(address(this));
     }
 
     function addTokenPool(string memory token, uint8 id) public onlyOwner {

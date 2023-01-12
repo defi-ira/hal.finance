@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-import "../../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
 interface IIntegration {
 
     event PoolAddLiquidityEvent(uint8 projectId, uint _poolId, uint256 _amountLD, address _to);
@@ -26,6 +24,10 @@ interface IIntegration {
         uint256 _amountLP,
         address _to
     ) external;
+
+    function getBalance(
+        address _poolAddress
+    ) external returns (uint256 balance);
 
 
 }

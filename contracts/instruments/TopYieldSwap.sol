@@ -20,7 +20,8 @@ contract TopYieldSwap is Ownable {
         uint16 id;              // unique pool id
         string project;         // project name
         string token;           // ERC20 name
-        address addr;           // pool address
+        address addr;           // router address
+        address poolAddr;       // pool address
         uint16 currentYield;    // pool yield
     }
 
@@ -79,6 +80,11 @@ contract TopYieldSwap is Ownable {
         return IERC20(tokenAddr).balanceOf(address(this));
     }
 
+    function getDepositBalance() public view returns (uint256 depositBalance) {
+        YieldPool memory yieldPool = yieldPools[activePool];
+        return IERC20(yieldPool.poolAddr).balanceOf(address(this));
+    }
+
     function enterPool(YieldPool memory _yieldPool) internal {
         IIntegration integration = IIntegration(_yieldPool.addr);
         integration.addLiquidity(_yieldPool.token, address(this).balance, address(this));
@@ -117,9 +123,10 @@ contract TopYieldSwap is Ownable {
         uint16 id,
         string memory _project,
         string memory _token,
-        address _addr
+        address _addr,
+        address _tokenAddr
     ) public onlyOwner returns(IIntegration integration) {
-        yieldPools[id] = YieldPool(id, _project, _token, _addr, 0x0);
+        yieldPools[id] = YieldPool(id, _project, _token, _addr, _tokenAddr, 0x0);
         integrations[id] = IIntegration(_addr);
         emit YieldPoolAdded(_project, _token, _addr);
         return integrations[id];

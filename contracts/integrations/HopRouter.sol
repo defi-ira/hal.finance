@@ -2,6 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/IHopRouter.sol";
 import "../interfaces/IIntegration.sol";
 
@@ -20,6 +21,10 @@ contract HopRouter is IIntegration, Ownable {
         projectId = _projectId;
         hopChainId = _chainId;
         hopTokenIndex = _hopTokenIndex;
+    }
+
+    function getBalance(address _poolAddress) public returns (uint256 balance) {
+        return IERC20(_poolAddress).balanceOf(address(this));
     }
 
     function addTokenPool(string memory token, uint8 id) public onlyOwner {
@@ -59,4 +64,5 @@ contract HopRouter is IIntegration, Ownable {
     function getDeadline(uint256 _timeBuffer) internal view returns (uint256 timestamp) {
         return block.timestamp + _timeBuffer;
     }
+    
 }
