@@ -13,6 +13,10 @@ contract OpenEndVault {
         token = IERC20(_token);
     }
 
+    function getBalance(address _addr) public view returns(uint256) {
+        return balanceOf[_addr];
+    }
+
     function _mint(address _to, uint256 _shares) private {
         totalSupply += _shares;
         balanceOf[_to] += _shares;
