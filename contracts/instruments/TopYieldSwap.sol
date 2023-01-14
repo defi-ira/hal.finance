@@ -8,13 +8,10 @@ import "./OpenEndVault.sol";
 
 contract TopYieldSwap is Ownable, OpenEndVault {
 
-    // TODO: make this contract depositable by a number of accounts.
-    // TODO: re-target to arbitrum environment.
-    // TODO: parameterize and do conditionals with risk stats on chain.
-
     uint16 private chainId;
     address private tokenAddr;
     uint16 private activePool;
+    uint256 private minTvl;
 
     struct YieldPool {
         uint16 id;              // unique pool id
@@ -23,12 +20,14 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         address addr;           // router address
         address poolAddr;       // pool address
         uint16 currentYield;    // pool yield
+        uint256 tvl;            // tvl
     }
 
     event YieldPoolAdded(string _project, string _token, address _addr);
     event YieldPoolRemoved(uint16 _id);
 
     event YieldPoolYieldSet(uint16 _poolId, uint16 _newYield);
+    event YieldPoolTvlSet(uint16 _poolId, uint256 _tvl);
 
     event EnterPool(uint16 _poolId, uint256 _amount, uint256 _balance);
     event ExitPool(uint16 _poolId, uint256 _amount);
@@ -101,7 +100,7 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         uint16 _topYield = 0x0;
         uint16 _poolId = 0;
         for (uint16 i = 0; i < _length; i++) {
-            if (yieldPools[_poolIds[i]].currentYield > _topYield) {
+            if (yieldPools[_poolIds[i]].currentYield > _topYield && yieldPools[_poolIds[i]].tvl >= minTvl) {
                 _topYield = yieldPools[_poolIds[i]].currentYield;
                 _poolId = _poolIds[i];
             }
@@ -116,7 +115,7 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         address _addr,
         address _tokenAddr
     ) public onlyOwner returns(IIntegration integration) {
-        yieldPools[id] = YieldPool(id, _project, _token, _addr, _tokenAddr, 0x0);
+        yieldPools[id] = YieldPool(id, _project, _token, _addr, _tokenAddr, 0x0, 0x0);
         integrations[id] = IIntegration(_addr);
         emit YieldPoolAdded(_project, _token, _addr);
         return integrations[id];
@@ -135,8 +134,17 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         emit YieldPoolYieldSet(_id, _yield);
     }
 
+    function setYieldPoolTvl(uint16 _id, uint256 _tvl) public onlyOwner {
+        yieldPools[_id].tvl = _tvl; 
+        emit YieldPoolTvlSet(_id, _tvl);
+    }
+
     function getYieldPool(uint16 _id) public view onlyOwner returns(YieldPool memory yieldPool) {
         return yieldPools[_id];
+    }
+
+    function setMinTvl(uint256 _minTvl) external onlyOwner {
+        minTvl = _minTvl;
     }
 
     modifier gtZero (uint256 _amount) {

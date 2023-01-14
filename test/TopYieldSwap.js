@@ -90,6 +90,26 @@ contract("TopYieldSwap", (accounts) => {
         assert.equal(selectPool.id, 0x2);
     });
 
+    it("should not select the pool with a tvl below the min", async() => {
+        const contractInstance = await createContractInstance1();
+        const hopIntegration = await addYieldPool1(contractInstance);
+        const stgIntegration = await addYieldPool2(contractInstance);
+        const acxIntegration = await addYieldPool3(contractInstance);
+
+        const setYield1 = await contractInstance.setYieldPoolYield(0x1, 0x9);
+        const setYield2 = await contractInstance.setYieldPoolYield(0x2, 0xFF);
+        const setYield3 = await contractInstance.setYieldPoolYield(0x3, 0x7);
+
+        const setTvl1 = await contractInstance.setYieldPoolTvl(0x1, 0x2FF);
+        const setTvl2 = await contractInstance.setYieldPoolTvl(0x2, 0x4FF);
+        const setTvl3 = await contractInstance.setYieldPoolTvl(0x3, 0x6FF);
+
+        const setMinTvl = await contractInstance.setMinTvl(0x5FF);
+
+        const selectPool = await contractInstance.selectPool([0x1, 0x2, 0x3], 3);
+        assert.equal(selectPool.id, 0x3);
+    });
+
     // 1.8.23 TODO: Mock yield pool interfacing contracts and test deposit, 
     // withdrawal, and rebalance - make FSM in Miro
 
