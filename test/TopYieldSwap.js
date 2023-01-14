@@ -65,11 +65,12 @@ contract("TopYieldSwap", (accounts) => {
         // ERC20PresetMinterPauser models the constraints of fiat-backed stablecoins
 
         const mint = await ERC20Instance.mint(user1, 0x4FFFF);
-        const transfer = await ERC20Instance.transfer(contractInstance.address, 0xFFFF, {from: user1});
-        
-        const approve = await contractInstance.approve(contractInstance.address, 0xFFFF, {from: user1});
-        const withdrawal = await contractInstance.withdrawal(user1, 0xFFFF, {from: owner});
-        assert.equal(withdrawal.receipt.status, true);
+        const approve = await ERC20Instance.approve(contractInstance.address, 0xFFFF, {from: user1});
+
+        const deposit = await contractInstance.deposit(0xFFFF, {from: user1});
+        assert.equal(deposit.receipt.status, true);
+        const withdraw = await contractInstance.withdraw(0xFFFF, {from: user1});
+        assert.equal(withdraw.receipt.status, true);
 
         const balance = await ERC20Instance.balanceOf(user1);
         assert.equal(balance, 0x4FFFF);
@@ -98,8 +99,8 @@ contract("TopYieldSwap", (accounts) => {
     async function createContractInstance1() {
         return await TopYieldSwap.new(
             0x1,    // chain id
-            "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8", // token address,
-            txParams 
+            "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8", // token address
+            txParams
         );
     }
 
@@ -116,7 +117,8 @@ contract("TopYieldSwap", (accounts) => {
             0x1,    // id 
             "HOP",  // project
             "USDC", // token
-            "0x10541b07d8Ad2647Dc6cD67abd4c03575dade261"
+            "0x10541b07d8Ad2647Dc6cD67abd4c03575dade261",
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         );
     }
 
@@ -125,7 +127,8 @@ contract("TopYieldSwap", (accounts) => {
             0x2,    // id 
             "STG",  // project
             "USDC", // token
-            "0x53Bf833A5d6c4ddA888F69c22C88C9f356a41614"
+            "0x53Bf833A5d6c4ddA888F69c22C88C9f356a41614",
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         );
     }
 
@@ -134,7 +137,8 @@ contract("TopYieldSwap", (accounts) => {
             0x3,    // id 
             "ACX",  // project
             "USDC", // token
-            "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
+            "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         );
     }
 

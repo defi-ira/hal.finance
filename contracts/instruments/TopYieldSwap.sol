@@ -4,11 +4,11 @@ pragma solidity >=0.4.22 <0.9.0;
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import "../interfaces/IIntegration.sol";
+import "./OpenEndVault.sol";
 
-contract TopYieldSwap is Ownable {
+contract TopYieldSwap is Ownable, OpenEndVault {
 
     // TODO: make this contract depositable by a number of accounts.
-    // TODO: produce daily contract value. checkBal as a function on each integration.
     // TODO: re-target to arbitrum environment.
     // TODO: parameterize and do conditionals with risk stats on chain.
 
@@ -36,7 +36,7 @@ contract TopYieldSwap is Ownable {
     mapping (uint16 => YieldPool) private yieldPools;
     mapping (uint16 => IIntegration) private integrations;
 
-    constructor(uint16 _chainId, address _tokenAddr) {
+    constructor(uint16 _chainId, address _tokenAddr) OpenEndVault(_tokenAddr) {
         chainId = _chainId;
         tokenAddr = _tokenAddr;
         activePool = 0x0;
@@ -64,16 +64,6 @@ contract TopYieldSwap is Ownable {
     function approve(address spender, uint256 _amount) public gtZero(_amount) {
         IERC20 tokenContract = IERC20(tokenAddr);
         tokenContract.approve(spender, _amount);
-    }
-
-    function deposit(uint256 _amount) payable public gtZero(_amount) {
-        IERC20 tokenContract = IERC20(tokenAddr);
-        tokenContract.transferFrom(msg.sender, address(this), _amount);
-    }
-
-    function withdrawal(address _to, uint256 _amount) public onlyOwner gtZero(_amount) {
-        IERC20 tokenContract = IERC20(tokenAddr);
-        tokenContract.transferFrom(address(this), _to, _amount);
     }
 
     function getTokenBalance() public view returns (uint256 tokenBalance) {

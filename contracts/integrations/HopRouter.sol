@@ -23,7 +23,7 @@ contract HopRouter is IIntegration, Ownable {
         hopTokenIndex = _hopTokenIndex;
     }
 
-    function getBalance(address _poolAddress) public returns (uint256 balance) {
+    function getBalance(address _poolAddress) public view returns (uint256 balance) {
         return IERC20(_poolAddress).balanceOf(address(this));
     }
 
