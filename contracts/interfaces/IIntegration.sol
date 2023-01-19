@@ -29,5 +29,4 @@ interface IIntegration {
         address _poolAddress
     ) external returns (uint256 balance);
 
-
 }
