@@ -70,8 +70,13 @@ contract HopRouter is IStakingIntegration, Ownable {
         router = IHopRouter(addr);
         router.addLiquidity(new uint256[](_amountLD), _amountLD, _to);
         emit PoolAddLiquidityEvent(projectId, tokenId[_token], _amountLD, _to);
-        // TODO: stake via the rewards contract
-        // https://arbiscan.io/address/0xb0cabfe930642ad3e7decdc741884d8c3f7ebc70#writeContract
+    }
+
+    function stakeLPTokens(
+        address _stakingAddress,
+        uint256 _amount
+    ) external {
+        IHopRewards(_stakingAddress).stake(_amount);
     }
 
     function removeLiquidity(

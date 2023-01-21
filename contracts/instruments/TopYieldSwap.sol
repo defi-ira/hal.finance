@@ -19,6 +19,7 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         string token;           // ERC20 name
         address addr;           // router address
         address poolAddr;       // pool address
+        address stakingAddr;    // staking address
         uint16 currentYield;    // pool yield
         uint256 tvl;            // tvl
     }
@@ -113,9 +114,10 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         string memory _project,
         string memory _token,
         address _addr,
-        address _tokenAddr
+        address _tokenAddr,
+        address _stakingAddr
     ) public onlyOwner returns(IIntegration integration) {
-        yieldPools[id] = YieldPool(id, _project, _token, _addr, _tokenAddr, 0x0, 0x0);
+        yieldPools[id] = YieldPool(id, _project, _token, _addr, _tokenAddr, _stakingAddr, 0x0, 0x0);
         integrations[id] = IIntegration(_addr);
         emit YieldPoolAdded(_project, _token, _addr);
         return integrations[id];
