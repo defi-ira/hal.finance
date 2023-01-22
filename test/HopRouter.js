@@ -19,5 +19,4 @@ contract("HopRouter", () => {
         assert.notEqual(getTokenPool, 0x1);
     });
 
-    // addLiquidity and removeLiquidity will have to be tested on chain
 });

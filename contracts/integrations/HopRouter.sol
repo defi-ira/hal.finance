@@ -36,7 +36,7 @@ contract HopRouter is IStakingIntegration, Ownable {
         return (IERC20(_poolAddress).balanceOf(address(this)) + IERC20(_stakingAddress).balanceOf(address(this))) * getVirtualPrice(_poolAddress);
     }
 
-    function getStakedBalance(address _stakingAddress) external view returns (uint256 stakedBalance) {
+    function getStakedBalance(address _stakingAddress) public view returns (uint256 stakedBalance) {
         return IERC20(_stakingAddress).balanceOf(address(this));
     }
 
@@ -72,13 +72,6 @@ contract HopRouter is IStakingIntegration, Ownable {
         emit PoolAddLiquidityEvent(projectId, tokenId[_token], _amountLD, _to);
     }
 
-    function stakeLPTokens(
-        address _stakingAddress,
-        uint256 _amount
-    ) external {
-        IHopRewards(_stakingAddress).stake(_amount);
-    }
-
     function removeLiquidity(
         string memory token,
         uint256 _amountLP,
@@ -87,6 +80,16 @@ contract HopRouter is IStakingIntegration, Ownable {
         router = IHopRouter(addr);
         router.removeLiquidityOneToken(_amountLP, hopTokenIndex, _amountLP, getDeadline(0x500000));
         emit PoolRemoveLiquidity(projectId, tokenId[token], _amountLP, _to);
+    }
+
+    function stake(address _poolAddress, address _stakingAddress) external {
+        uint256 balance = getBalance(_poolAddress);
+        IHopRewards(_stakingAddress).stake(balance);
+    }
+
+    function unstake(address _stakingAddress) external {
+        uint256 stakedBalance = getStakedBalance(_stakingAddress);
+        IHopRewards(_stakingAddress).withdraw(stakedBalance);
     }
 
     function getDeadline(uint256 _timeBuffer) internal view returns (uint256 timestamp) {

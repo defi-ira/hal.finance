@@ -4,6 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import "../interfaces/IIntegration.sol";
+import "../interfaces/IStakingIntegration.sol";
 import "./OpenEndVault.sol";
 
 contract TopYieldSwap is Ownable, OpenEndVault {
@@ -35,6 +36,7 @@ contract TopYieldSwap is Ownable, OpenEndVault {
 
     mapping (uint16 => YieldPool) private yieldPools;
     mapping (uint16 => IIntegration) private integrations;
+    mapping (uint16 => bool) private tokensStaked;
 
     constructor(uint16 _chainId, address _tokenAddr) OpenEndVault(_tokenAddr) {
         chainId = _chainId;
@@ -87,6 +89,18 @@ contract TopYieldSwap is Ownable, OpenEndVault {
         uint256 balance = IERC20(currentPool.addr).balanceOf(address(this));
         integration.removeLiquidity(currentPool.token, balance, address(this));
         activePool = 0x0;
+    }
+
+    function stakePool(uint16 _poolId) public isStakingPool(_poolId) unstaked(_poolId) {
+        IStakingIntegration integration = IStakingIntegration(yieldPools[_poolId].addr);
+        integration.stake(yieldPools[_poolId].addr, yieldPools[_poolId].stakingAddr);
+        tokensStaked[_poolId] = true;
+    }
+
+    function unstakePool(uint16 _poolId) public isStakingPool(_poolId) staked(_poolId) {
+        IStakingIntegration integration = IStakingIntegration(yieldPools[_poolId].addr);
+        integration.unstake(yieldPools[_poolId].stakingAddr);
+        tokensStaked[_poolId] = false;
     }
 
     function shouldSwap(uint16[] calldata _poolIds, uint16 _length) internal view returns(bool _bool) {
@@ -147,6 +161,21 @@ contract TopYieldSwap is Ownable, OpenEndVault {
 
     function setMinTvl(uint256 _minTvl) external onlyOwner {
         minTvl = _minTvl;
+    }
+
+    modifier isStakingPool(uint16 _poolId) {
+        require (yieldPools[_poolId].stakingAddr != address(0x0), "Current pool does not support staking");
+        _;
+    }
+
+    modifier staked(uint16 _poolId) {
+        require (tokensStaked[_poolId] == true, "Pool tokens are not staked");
+        _;
+    }
+
+    modifier unstaked(uint16 _poolId) {
+        require (tokensStaked[_poolId] == false, "Pool tokens are staked");
+        _;
     }
 
     modifier gtZero (uint256 _amount) {

@@ -13,4 +13,13 @@ interface IStakingIntegration is IIntegration {
         address _poolAddress
     ) external view returns (uint256 rewardsBalance);
 
+    function stake(
+        address _poolAddress,
+        address _stakingAddress
+    ) external;
+
+    function unstake(
+        address _stakingAddress
+    ) external;
+
 }
