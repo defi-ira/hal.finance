@@ -5,9 +5,10 @@ import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import "../interfaces/IIntegration.sol";
 import "../interfaces/IStakingIntegration.sol";
+import "../libs/Cooldown.sol";
 import "./OpenEndVault.sol";
 
-contract TopYieldSwap is Ownable, OpenEndVault {
+contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
 
     uint16 private chainId;
     address private tokenAddr;

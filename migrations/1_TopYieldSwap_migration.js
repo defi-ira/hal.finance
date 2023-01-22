@@ -27,7 +27,7 @@ module.exports = async function(deployer) {
     );
     const hop = await hopRouter.deployed();
 
-    const stgYieldPool = await instance.addYieldPool(0x1, "STG", "USDC", stg.address, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
+    const stgYieldPool = await instance.addYieldPool(0x1, "STG", "USDC", stg.address, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
     const addTokenToStg = await stg.addTokenPool("USDC", 0x1);
 
     // const hopYieldPool = await instance.addYieldPool(0x2, "HOP", "USDC", hop.address);

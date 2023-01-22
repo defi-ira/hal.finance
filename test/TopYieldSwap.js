@@ -138,7 +138,8 @@ contract("TopYieldSwap", (accounts) => {
             "HOP",  // project
             "USDC", // token
             "0x10541b07d8Ad2647Dc6cD67abd4c03575dade261",
-            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "0x0000000000000000000000000000000000000000"
         );
     }
 
@@ -148,7 +149,8 @@ contract("TopYieldSwap", (accounts) => {
             "STG",  // project
             "USDC", // token
             "0x53Bf833A5d6c4ddA888F69c22C88C9f356a41614",
-            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "0x0000000000000000000000000000000000000000"
         );
     }
 
@@ -158,7 +160,8 @@ contract("TopYieldSwap", (accounts) => {
             "ACX",  // project
             "USDC", // token
             "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
-            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "0x0000000000000000000000000000000000000000"
         );
     }
 
