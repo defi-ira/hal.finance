@@ -6,7 +6,7 @@ import "../../node_modules/@openzeppelin/contracts/token/ERC20/presets/ERC20Pres
 import "../interfaces/IIntegration.sol";
 import "../interfaces/IStakingIntegration.sol";
 import "../libs/Cooldown.sol";
-import "./OpenEndVault.sol";
+import "../libs/OpenEndVault.sol";
 
 contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
 
