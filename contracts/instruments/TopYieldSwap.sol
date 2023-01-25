@@ -60,6 +60,12 @@ contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
         }
     }
 
+    /*
+    function mintVaultBallot(uint256 minTvl_, bool vetoNew_) public depositor(msg.sender) returns (VaultBallot token_) {
+        
+    }
+    */
+
     function getCurrentYield() public view returns (uint16 _apy) {
         return yieldPools[activePool].currentYield;
     }
@@ -176,6 +182,11 @@ contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
 
     modifier unstaked(uint16 _poolId) {
         require (tokensStaked[_poolId] == false, "Pool tokens are staked");
+        _;
+    }
+
+    modifier depositor(address address_) {
+        require (balanceOf[address_] > 0, "Address is not depositor");
         _;
     }
 
