@@ -12,6 +12,7 @@ contract VaultBallot is ERC721, Ownable {
     mapping(uint256 => uint256) private _minTvl;
     mapping(uint256 => uint16[]) private _veto;
     mapping(address => uint256) private _owners;
+    mapping(uint256 => address) private _minters;
 
     constructor(string memory name_, string memory symbol_) 
         ERC721(name_, symbol_) { }
@@ -41,6 +42,7 @@ contract VaultBallot is ERC721, Ownable {
         _tokenId.increment();
         uint256 tokenId = _tokenId.current();
         _safeMint(to_, tokenId);
+        _minters[tokenId] = to_;
         return tokenId;
     }
 
@@ -48,6 +50,5 @@ contract VaultBallot is ERC721, Ownable {
         require(ownerOf(token_) == addr_, "Contract caller is not the owner of token.");
         _;
     }
-
 
 }

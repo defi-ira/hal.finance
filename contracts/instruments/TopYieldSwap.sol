@@ -1,14 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../../node_modules/@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import "../interfaces/IIntegration.sol";
 import "../interfaces/IStakingIntegration.sol";
-import "../libs/Cooldown.sol";
-import "../libs/OpenEndVault.sol";
+import "../libs/YieldVault.sol";
 
-contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
+contract TopYieldSwap is YieldVault {
 
     uint16 private chainId;
     address private tokenAddr;
@@ -39,7 +36,7 @@ contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
     mapping (uint16 => IIntegration) private integrations;
     mapping (uint16 => bool) private tokensStaked;
 
-    constructor(uint16 _chainId, address _tokenAddr) OpenEndVault(_tokenAddr) {
+    constructor(uint16 _chainId, address _tokenAddr, address vaultBallot_) YieldVault(_tokenAddr, vaultBallot_) {
         chainId = _chainId;
         tokenAddr = _tokenAddr;
         activePool = 0x0;
@@ -182,11 +179,6 @@ contract TopYieldSwap is Ownable, OpenEndVault, Cooldown {
 
     modifier unstaked(uint16 _poolId) {
         require (tokensStaked[_poolId] == false, "Pool tokens are staked");
-        _;
-    }
-
-    modifier depositor(address address_) {
-        require (balanceOf[address_] > 0, "Address is not depositor");
         _;
     }
 

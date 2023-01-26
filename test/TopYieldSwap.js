@@ -2,6 +2,7 @@ const { assert } = require("chai");
 
 const TopYieldSwap = artifacts.require("TopYieldSwap");
 const ERC20 = artifacts.require("ERC20PresetMinterPauser");
+const VaultBallot = artifacts.require("VaultBallot");
 
 contract("TopYieldSwap", (accounts) => {
     const [owner, user1, user2] = accounts;
@@ -117,17 +118,21 @@ contract("TopYieldSwap", (accounts) => {
     // HELPERS //
 
     async function createContractInstance1() {
+        const vaultBallot = await getVaultBallot();
         return await TopYieldSwap.new(
-            0x1,    // chain id
-            "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8", // token address
+            0x1,                                            // chain id
+            "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",   // token address
+            vaultBallot.address,                            // vault ballot address
             txParams
         );
     }
 
     async function createContractInstance2(erc20) {
+        const vaultBallot = await getVaultBallot();
         return await TopYieldSwap.new(
-            0x1,    // chain id
-            erc20.address, // token address,
+            0x1,                        // chain id
+            erc20.address,              // token address,
+            vaultBallot.address,        // vault ballot address
             txParams 
         );
     }
@@ -163,6 +168,10 @@ contract("TopYieldSwap", (accounts) => {
             "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
             "0x0000000000000000000000000000000000000000"
         );
+    }
+
+    async function getVaultBallot() {
+        return await VaultBallot.new("banUSDI", "banUSDI");
     }
 
     async function createERC20Instance() {

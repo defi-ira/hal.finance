@@ -1,4 +1,5 @@
 var topYieldSwap = artifacts.require("../contracts/instruments/TopYieldSwap.sol");
+var vaultBallot = artifacts.require("../contracts/libs/VaultBallot.sol");
 var stargateRouter = artifacts.require("../contracts/integrations/StargateRouter.sol");
 var hopRouter = artifacts.require("../contracts/integrations/HopRouter.sol");
 
@@ -6,7 +7,15 @@ module.exports = async function(deployer) {
     /**
      * Deploys the TopYieldSwap instrument with the chain id 1 and the address of USDC on Arbitrum
      */
-    await deployer.deploy(topYieldSwap, 0x1, "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8");
+    await deployer.deploy(vaultBallot, "banUSDI", "banUSDI");
+    const vaultBallotInstance = await vaultBallot.deployed();
+
+    await deployer.deploy(
+        topYieldSwap, 
+        0x1, 
+        "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+        vaultBallotInstance.address
+    );
     const instance = await topYieldSwap.deployed();
 
     await deployer.deploy(
