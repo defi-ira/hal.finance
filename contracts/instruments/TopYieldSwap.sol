@@ -36,7 +36,7 @@ contract TopYieldSwap is YieldVault {
     mapping (uint16 => IIntegration) private integrations;
     mapping (uint16 => bool) private tokensStaked;
 
-    constructor(uint16 _chainId, address _tokenAddr, address vaultBallot_) YieldVault(_tokenAddr, vaultBallot_) {
+    constructor(uint16 _chainId, address _tokenAddr, address vaultBallot_, uint256 variance_) YieldVault(_tokenAddr, vaultBallot_, variance_) {
         chainId = _chainId;
         tokenAddr = _tokenAddr;
         activePool = 0x0;

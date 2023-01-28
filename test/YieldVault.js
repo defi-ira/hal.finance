@@ -35,6 +35,7 @@ contract("YieldVault", (accounts) => {
         yieldVault = await YieldVault.new(
             erc20.address,
             vaultBallot.address,
+            0x20,
             {from: owner}
         );
         const resetOwner = vaultBallot.transferOwnership(yieldVault.address);

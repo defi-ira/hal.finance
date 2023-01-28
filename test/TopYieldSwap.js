@@ -123,6 +123,7 @@ contract("TopYieldSwap", (accounts) => {
             0x1,                                            // chain id
             "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",   // token address
             vaultBallot.address,                            // vault ballot address
+            0x20,
             txParams
         );
     }
@@ -133,6 +134,7 @@ contract("TopYieldSwap", (accounts) => {
             0x1,                        // chain id
             erc20.address,              // token address,
             vaultBallot.address,        // vault ballot address
+            0x20,
             txParams 
         );
     }

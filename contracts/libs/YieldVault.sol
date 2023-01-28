@@ -3,19 +3,22 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "./OpenEndVault.sol";
 import "./Cooldown.sol";
+import "./VaultBounty.sol";
 import "./IVaultBallot.sol";
 
-contract YieldVault is Ownable, OpenEndVault, Cooldown {
+contract YieldVault is Ownable, OpenEndVault, VaultBounty, Cooldown {
 
     mapping(uint256 => address) _ballotAddress;
     mapping(address => bool) _minted;
     address private _vaultBallot;
+    uint256 private _variance;
 
     event MintYieldVaultBallot(address addr_, uint256 value_);
     event UpdateYieldVaultBallot(uint256 token_, uint256 value_);
 
-    constructor(address tokenAddr_, address vaultBallot_) OpenEndVault(tokenAddr_) {
+    constructor(address tokenAddr_, address vaultBallot_, uint256 variance_) OpenEndVault(tokenAddr_) {
         _vaultBallot = vaultBallot_;
+        _variance = variance_;
     }
 
     function ballotBalance(uint256 token_) public view returns (uint256 balance_) {

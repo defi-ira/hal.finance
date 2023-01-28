@@ -12,9 +12,10 @@ module.exports = async function(deployer) {
 
     await deployer.deploy(
         topYieldSwap, 
-        0x1, 
+        0x1,
         "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
-        vaultBallotInstance.address
+        vaultBallotInstance.address,
+        0x20,
     );
     const instance = await topYieldSwap.deployed();
 
